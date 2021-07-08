@@ -1,62 +1,85 @@
 <template>
-<div>
-    <div v-if="showForm" class="filter" @click="showForm = !showForm"></div>  
-<div class="wrapper-Form">   
-    <button class="addCost" @click="showForm = !showForm">
-      Add new cost +
-    </button>
-    <form v-if="showForm" class="addFormCoast" @submit.prevent.stop="$emit('add-espense', espense)"> 
-      <div class="row">
-        <label for="costDate">Date: </label>
-        <input v-model="espense.date" class="inputData" id="costDate" type="date" />
-      </div>
-      <div class="row">
-        <label for="costCategory">Category:</label>
-        <input v-model="espense.category" class="inputData" id="costCategory" type="text" />
-      </div>
-      <div class="row">
-        <label for="costValue">Value:</label>
-        <input v-model.number="espense.cost" class="inputData" id="costValue" type="text" />
-      </div>
-      <div class="row">
-          <button class="btn-save" type="submit" > Записать </button>
-          <button class="btn-close" @click="showForm = false" > Закрыть </button>          
-      </div>
-    </form>
-  </div>    
-</div>
+  <div>
+    <div v-if="showForm" class="filter" @click="showForm = !showForm"></div>
+    <div class="wrapper-Form">
+      <button class="addCost" @click="showForm = !showForm">
+        Add new cost +
+      </button>
+      <form
+        v-if="showForm"
+        class="addFormCoast"
+        @submit.prevent.stop="$emit('add-espense', espense)"
+      >
+        <div class="row">
+          <label for="costDate">Date: </label>
+          <input
+            v-model="espense.date"
+            class="inputData"
+            id="costDate"
+            type="date"
+          />
+        </div>
+        <div class="row">
+            <div>Category: </div>
+          <select v-model="espense.category" class="inputData">
+            <option
+              v-for="(category, idx) of categories"
+              :key="category + idx"
+              :value="category"
+            >
+              {{ category }}
+            </option>
+          </select>
+        </div>
+        <div class="row">
+          <label for="costValue">Value:</label>
+          <input
+            v-model.number="espense.cost"
+            class="inputData"
+            id="costValue"
+            type="text"
+          />
+        </div>
+        <div class="row">
+          <button class="btn-save" type="submit">Записать</button>
+          <button class="btn-close" @click="showForm = false">Закрыть</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
     props:  {
-        expenses: {
+        categories: {
             type: Array,
             default: () => [],
-        }
+        },        
+        countExpenses: {
+            type: Number,
+            default: 1,
+        },
     },
     name: 'FormAddExpense',
     data(){
         return{
             showForm: false,
             espense: {
-                id: null,
+                id: this.countExpenses + 1,
                 date: '',
                 category: '',
                 cost: 0
             }
         }
     },
-    methods: {
-
-    }
 }
 </script>
 
 <style scoped>
 .wrapper-Form {
   width: fit-content;
-  position: relative;    
+  position: relative;
 }
 .addCost {
   padding: 10px 24px;
@@ -87,16 +110,16 @@ export default {
   z-index: 20;
 }
 .row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-direction: row;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
 }
 .row:not(:last-child) {
-    margin-bottom: 12px;
+  margin-bottom: 12px;
 }
 label {
-    margin-right: 12px;
+  margin-right: 12px;
 }
 .inputData {
   padding: 8px 16px;
@@ -108,17 +131,18 @@ label {
 .inputData:focus {
   border-bottom: 1px solid #016401;
 }
-.btn-save, .btn-close {
+.btn-save,
+.btn-close {
   margin-top: 8px;
   padding: 8px 16px;
   justify-self: end;
-  border: transparent;  
+  border: transparent;
   background: teal;
   color: white;
   font-weight: 700;
-  text-transform: uppercase; 
+  text-transform: uppercase;
 }
 .btn-close {
-    background: rosybrown; 
+  background: rosybrown;
 }
 </style>
