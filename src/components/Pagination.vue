@@ -1,22 +1,22 @@
 <template>
-    <div v-if="quantityItems > quantityOnPage" class="pagination">
+    <div v-if="countPages > 1" class="pagination">
         <button class="page"
-        :disabled="pageNumber === 1"
-        @click="prevPage"        
+        :disabled="page === 1"
+        @click="page -= 1"        
         >
         &lt;
         </button>
         <button class="page"
-        :class="{ active_page : pageNumber === n  }"
+        :class="{ active_page : page === n  }"
         v-for="n in countPages" 
         :key="n" 
-        @click="selectPage(n)"
+        @click="page = n"
         > 
         {{ n }} 
         </button>
         <button class="page"
-        :disabled="pageNumber === countPages"
-        @click="nextPage"
+        :disabled="page === countPages"
+        @click="page += 1"
         >
         &gt;
         </button>        
@@ -31,43 +31,20 @@ export default {
             type: Number,
             default: 1
         },
-        quantityItems: {
+        countPages: {
             type: Number,
-            default: 1
-        },
+            default: 1, 
+        }           
     },
     data() {
         return {
-            pageNumber: 1,
+            page: 1,
         }
     },
-    computed: {
-        countPages() {
-            return Math.ceil(this.quantityItems / this.quantityOnPage)
-        },
-        page() {
-            return {
-                start: this.pageNumber * this.quantityOnPage - this.quantityOnPage, 
-                end: this.pageNumber * this.quantityOnPage
-                }
-        }
-    },
-    methods: {
-        nextPage(){
-            this.pageNumber += 1;
-            this.$emit('select-page', this.page);
-        },
-        prevPage(){
-            this.pageNumber -= 1;
-            this.$emit('select-page', this.page);
-        },
-        selectPage(n){
-            this.pageNumber = n;
-            this.$emit('select-page', this.page);
-        }        
-    },
-    created() {
-        this.selectPage(1);
+    watch: {
+        page: function(page) {
+            this.$emit('select-page', page - 1)
+        } 
     }
 }
 </script>
